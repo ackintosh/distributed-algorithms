@@ -3,7 +3,7 @@ package leader_election.simple;
 class Node extends Thread {
     private final Queue sendQueue;
     private final Queue receiveQueue;
-    private String status = "waiting";
+    private Status status = Status.WAITING;
 
     public Node(String name, Queue sendQueue, Queue receiveQueue) {
         super(name);
@@ -31,24 +31,31 @@ class Node extends Thread {
 
     private void handleStartMessage() {
         echo("waiting -> candidate");
-        status = "candidate";
+        status = Status.CANDIDATE;
         echo("send token");
         sendQueue.putMessage(new Token(Thread.currentThread().getId()));
     }
 
     private void handleToken(Token token) {
         echo("received token. (id: " + token.getId() + ")");
-        if (token.getId() == Thread.currentThread().getId() && status == "candidate") {
+        if (token.getId() == Thread.currentThread().getId() && status.equals(Status.CANDIDATE)) {
             echo("candidate -> leader");
-            status = "leader";
+            status = Status.LEADER;
         } else {
-            if (status == "waiting" || token.getId() > Thread.currentThread().getId()) {
+            if (status.equals(Status.WAITING) || token.getId() > Thread.currentThread().getId()) {
                 echo("waiting -> not leader");
-                status = "not leader";
+                status = Status.NOT_LEADER;
             }
             if (token.getId() != Thread.currentThread().getId()) {
                 sendQueue.putMessage(token);
             }
         }
     }
+}
+
+enum Status {
+    WAITING,
+    CANDIDATE,
+    NOT_LEADER,
+    LEADER,
 }
