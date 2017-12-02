@@ -6,7 +6,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 class Queue {
     private final BlockingQueue<Message> queue = new LinkedBlockingQueue<Message>();
 
-    public Message getMessage() {
+    Message getMessage() {
         Message m = null;
         try {
             m = queue.take();
@@ -17,7 +17,7 @@ class Queue {
         return m;
     }
 
-    public void putMessage(Message message) {
+    void putMessage(Message message) {
         try {
             queue.put(message);
         } catch (InterruptedException e) {

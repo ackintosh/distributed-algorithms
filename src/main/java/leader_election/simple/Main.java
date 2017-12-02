@@ -20,7 +20,7 @@ public class Main {
         queue1to2.putMessage(new StartMessage());
     }
 
-    public static void echo(String message) {
+    private static void echo(String message) {
         System.out.println("[Main] " + message);
     }
 }

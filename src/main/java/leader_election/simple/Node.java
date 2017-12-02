@@ -5,7 +5,7 @@ class Node extends Thread {
     private final Queue receiveQueue;
     private Status status = Status.WAITING;
 
-    public Node(String name, Queue sendQueue, Queue receiveQueue) {
+    Node(String name, Queue sendQueue, Queue receiveQueue) {
         super(name);
         this.sendQueue = sendQueue;
         this.receiveQueue = receiveQueue;
@@ -24,7 +24,7 @@ class Node extends Thread {
         }
     }
 
-    public void echo(String message) {
+    private void echo(String message) {
         System.out.println("[" + Thread.currentThread().getName()
                 + "](" + Thread.currentThread().getId() + ") " + message);
     }
