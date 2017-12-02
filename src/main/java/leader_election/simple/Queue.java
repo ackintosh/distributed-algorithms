@@ -1,22 +1,27 @@
 package leader_election.simple;
 
-import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class Queue {
-    private final LinkedList<Message> linkedList = new LinkedList<Message>();
+    private final BlockingQueue<Message> queue = new LinkedBlockingQueue<Message>();
 
-    public synchronized Message getMessage() {
-        while (linkedList.peek() == null) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-            }
+    public Message getMessage() {
+        Message m = null;
+        try {
+            m = queue.take();
+        } catch (InterruptedException e) {
+
         }
-        return linkedList.remove();
+
+        return m;
     }
 
-    public synchronized void putMessage(Message message) {
-        linkedList.offer(message);
-        notifyAll();
+    public void putMessage(Message message) {
+        try {
+            queue.put(message);
+        } catch (InterruptedException e) {
+
+        }
     }
 }
